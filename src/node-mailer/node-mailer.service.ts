@@ -1,7 +1,6 @@
-// node-mailer.service.ts
 import { Inject, Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import crypto from 'crypto';
+import { randomInt } from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Client } from '../user-client/entities/client.entity';
 import { Repository } from 'typeorm';
@@ -48,7 +47,7 @@ export class NodeMailerService {
 
     const digits = [];
     for (let i = 0; i < length; i++) {
-      digits.push(Math.floor(crypto.randomInt(0, 10)));
+      digits.push(Math.floor(randomInt(0, 10)));
     }
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
     const value: string = digits.join('');
