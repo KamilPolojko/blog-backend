@@ -26,6 +26,8 @@ async function bootstrap() {
   app.enableCors({
     origin: [process.env.FRONTEND_URL],
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   app.use(
@@ -38,8 +40,6 @@ async function bootstrap() {
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        domain:
-          process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined,
       },
     }),
   );
