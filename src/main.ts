@@ -22,7 +22,6 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
-  console.log('Test corsa', process.env.FRONTEND_URL);
 
   app.enableCors({
     origin: [process.env.FRONTEND_URL],
@@ -36,6 +35,11 @@ async function bootstrap() {
       saveUninitialized: false,
       cookie: {
         maxAge: 3600000,
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        domain:
+          process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined,
       },
     }),
   );
