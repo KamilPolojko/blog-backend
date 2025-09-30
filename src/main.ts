@@ -9,6 +9,8 @@ import * as passport from 'passport';
 import { NodeMailerModule } from './node-mailer/node-mailer.module';
 import { ArticleModule } from './article-client/article.module';
 import { NotificationModule } from './notification/notification.module';
+import { LikeModule } from './article-client/like/like.module';
+import { CommentModule } from './article-client/comment/comment.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -52,6 +54,8 @@ async function bootstrap() {
       AuthModule,
       NodeMailerModule,
       ArticleModule,
+      LikeModule,
+      CommentModule,
       NotificationModule,
     ],
   });
