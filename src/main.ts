@@ -11,6 +11,7 @@ import { ArticleModule } from './article-client/article.module';
 import { NotificationModule } from './notification/notification.module';
 import { LikeModule } from './article-client/like/like.module';
 import { CommentModule } from './article-client/comment/comment.module';
+import * as process from 'node:process';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,6 +22,7 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
+  console.log('Test corsa', process.env.FRONTEND_URL);
 
   app.enableCors({
     origin: [process.env.FRONTEND_URL],
