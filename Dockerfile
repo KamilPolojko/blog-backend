@@ -13,8 +13,10 @@ FROM node:20-alpine
 WORKDIR /app
 
 COPY package*.json ./
-
 RUN npm ci --only=production && npm cache clean --force
+
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 COPY --from=builder /app/dist ./dist
 
@@ -27,4 +29,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3000/health || exit 1
 
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["node", "dist/src/main.js"]
