@@ -11,7 +11,9 @@ import Redis from 'ioredis';
           host: process.env.REDIS_HOST,
           port: Number(process.env.REDIS_PORT),
         });
-
+        if (process.env.REDIS_PASSWORD) {
+          redis.options.password = process.env.REDIS_PASSWORD;
+        }
         redis.on('connect', () => {
           console.log('✅ Redis connected successfully');
         });
