@@ -1,5 +1,6 @@
 import { Module, Global } from '@nestjs/common';
 import Redis from 'ioredis';
+import * as process from 'node:process';
 
 @Global()
 @Module({
@@ -10,10 +11,9 @@ import Redis from 'ioredis';
         const redis = new Redis({
           host: process.env.REDIS_HOST,
           port: Number(process.env.REDIS_PORT),
+          password: process.env.REDIS_PASSWORD,
         });
-        if (process.env.REDIS_PASSWORD) {
-          redis.options.password = process.env.REDIS_PASSWORD;
-        }
+
         redis.on('connect', () => {
           console.log('✅ Redis connected successfully');
         });
