@@ -27,7 +27,7 @@ export class ClientService {
 
   async findAll(): Promise<Client[]> {
     return await this.clientRepository.find({
-      relations: ['profile', 'articles'],
+      relations: ['profile'],
     });
   }
 
