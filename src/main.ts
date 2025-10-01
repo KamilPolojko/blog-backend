@@ -16,13 +16,6 @@ import * as process from 'node:process';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-    }),
-  );
-
   app.enableCors({
     origin: [process.env.FRONTEND_URL],
     credentials: true,
@@ -30,28 +23,12 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
-  app.use(
-    session({
-      secret: process.env.SESSION_SECRET,
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        maxAge: 3600000,
-        secure: process.env.NODE_ENV === 'production',
-        httpOnly: true,
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      },
-    }),
-  );
-
-  app.use(passport.initialize());
-  app.use(passport.session());
-
   const clientConfig = new DocumentBuilder()
     .setTitle('Clothes shop for client')
     .setDescription('Clothes Shop API for clients')
     .setVersion('1.0')
     .addTag('Client')
+    .addBearerAuth()
     .build();
 
   const clientDocument = SwaggerModule.createDocument(app, clientConfig, {

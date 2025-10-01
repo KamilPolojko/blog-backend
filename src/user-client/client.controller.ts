@@ -15,9 +15,8 @@ import {
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { GetClientsQuery } from './queries/getClients/impl/get-clients.query';
 import { CreateClientCommand } from './commands/signUpClient/impl/create-client.command';
-import { ApiBody, ApiConsumes, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 import { DeleteClientCommand } from './commands/deleteClient/impl/delete-client.command';
-import { AuthenticatedGuard } from '../auth/authenticated.guard';
 import { Client } from './entities/client.entity';
 import { signUpClientDTO } from './commands/signUpClient/dto/signUp-client.dto';
 import { fillUpProfileDTO } from './commands/fillProfileClient/dto/fill-profile.dto';
@@ -31,6 +30,7 @@ import { changePasswordDTO } from './commands/changeClientPassword/dto/change-pa
 import { ChangeClientPasswordCommand } from './commands/changeClientPassword/impl/change-client-password.command';
 import { ClientDto } from './queries/getCurrentLoggedClient/dto/ClientDTO';
 import { GetClientQuery } from './queries/getClient/impl/get-client.query';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 export type RequestWithUser = Request & { user: Client };
 
@@ -49,7 +49,8 @@ export class ClientController {
     return await this.queryBus.execute(new GetClientsQuery());
   }
 
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get user after success login',
   })
@@ -71,7 +72,8 @@ export class ClientController {
     return await this.commandBus.execute(new CreateClientCommand(dto));
   }
 
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Patch('/fill-profile')
   @ApiOperation({
     summary: "Fill user's profile",
@@ -105,7 +107,8 @@ export class ClientController {
     await this.commandBus.execute(new FillProfileClientCommand(dto, file));
   }
 
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Patch('/change-email')
   @ApiOperation({
     summary: 'Changes user e-mail',
@@ -150,7 +153,8 @@ export class ClientController {
     return await this.commandBus.execute(new ChangeClientPasswordCommand(dto));
   }
 
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete('/clients/:uuid')
   @ApiOperation({
     summary: 'Remove client account',

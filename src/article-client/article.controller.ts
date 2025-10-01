@@ -13,9 +13,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-
-import { AuthenticatedGuard } from '../auth/authenticated.guard';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiOperation,
@@ -38,6 +37,7 @@ import { ArticleDto } from './queries/getArticles/dto/article.dto';
 import { OrderType } from './types/orderType';
 import { GetArticlesQueryDto } from './queries/getArticlesCreatedByClient/dto/get.articles.query.dto';
 import { PaginatedArticlesDto } from './queries/getArticlesCreatedByClient/dto/PaginatedArticlesDto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 export interface ArticlesPage {
   articles: Article[];
@@ -92,7 +92,8 @@ export class ArticleController {
     );
   }
 
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Patch('/create')
   @ApiOperation({ summary: 'Create article with image upload' })
   @ApiConsumes('multipart/form-data')
@@ -146,7 +147,8 @@ export class ArticleController {
     await this.commandBus.execute(new CreateArticleCommand(body, file));
   }
 
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Patch('/edit')
   @ApiOperation({ summary: 'Editing an article with a image upload' })
   @ApiConsumes('multipart/form-data')
@@ -228,7 +230,8 @@ export class ArticleController {
     return await this.queryBus.execute(new GetArticleQuery(id));
   }
 
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete('/:id')
   @ApiOperation({ summary: 'Delete article by id' })
   @ApiParam({ name: 'id', description: 'Article ID' })

@@ -19,7 +19,7 @@ services:
       DATABASE_NAME: blog-db
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      SESSION_SECRET: blog_secret
+      JWT_SECRET: blog_secret
       MAIL_HOST: smtp.gmail.com
       MAIL_SECURE: "true"
       MAIL_SERVICE_MESSAGE_SENDER: morfo12354@gmail.com

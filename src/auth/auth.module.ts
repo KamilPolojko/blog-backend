@@ -4,10 +4,10 @@ import { AuthService } from './auth.service';
 import { ClientModule } from '../user-client/client.module';
 import { ClientService } from '../user-client/client.service';
 import { PassportModule } from '@nestjs/passport';
-import { LocalStrategy } from './local.strategy';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
 import { CqrsModule } from '@nestjs/cqrs';
-import { SessionSerializer } from './session.serializer';
 
 dotenv.config();
 
@@ -15,10 +15,14 @@ dotenv.config();
   imports: [
     ClientModule,
     CqrsModule,
-    PassportModule.register({ session: true }),
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '7d' },
+    }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, ClientService, LocalStrategy, SessionSerializer],
+  providers: [AuthService, ClientService, JwtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

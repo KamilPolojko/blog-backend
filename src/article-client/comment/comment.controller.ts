@@ -11,7 +11,13 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBody,
+  ApiConsumes,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { AddCommentCommand } from './commands/addComment/impl/add-comment.command';
 import { DeleteCommentCommand } from './commands/deleteComment/impl/delete-comment.command';
@@ -19,8 +25,8 @@ import { GetAllCommentsForArticleQuery } from './queries/getAllCommentsForArticl
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { Comment } from '../entities/comment.entity';
 import { EditCommentCommand } from './commands/editComment/impl/edit-comment.command';
-import { AuthenticatedGuard } from '../../auth/authenticated.guard';
 import { AddCommentDTO } from './commands/addComment/dto/AddCommentDTO';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 @ApiTags('Comments')
 @Controller('/client/comments')
@@ -30,7 +36,8 @@ export class CommentController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Post()
   @ApiOperation({ summary: 'Add comment to article' })
   @ApiConsumes('application/x-www-form-urlencoded')
@@ -53,7 +60,8 @@ export class CommentController {
     return this.commandBus.execute(new AddCommentCommand(body));
   }
 
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Put()
   @ApiOperation({ summary: 'Edit comment' })
   @ApiConsumes('multipart/form-data')
@@ -82,7 +90,8 @@ export class CommentController {
     return this.queryBus.execute(new GetAllCommentsForArticleQuery(articleId));
   }
 
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   @ApiOperation({ summary: 'Remove comment from article' })
   @HttpCode(HttpStatus.NO_CONTENT)

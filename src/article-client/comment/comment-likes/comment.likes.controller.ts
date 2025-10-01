@@ -1,22 +1,21 @@
 import { Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
-import { CommentLikesService } from './comment.likes.service';
 import { RequestWithUser } from '../../../user-client/client.controller';
-import { AuthenticatedGuard } from '../../../auth/authenticated.guard';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ToggleLikeCommand } from './commands/toggleLike/impl/toggle-like.command';
 import { GetCommentLikesCountQuery } from './queries/getCommentLikesCount/impl/get-comment-likes-count.query';
 import { IsLikedByCurrentLoggedUserQuery } from './queries/isLikedByCurrentLoggedUser/impl/is-liked-by-current-logged-user.query';
+import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 
 @Controller('/client/commentLikes')
 export class CommentLikesController {
   constructor(
-    private readonly commentLikesService: CommentLikesService,
     private readonly queryBus: QueryBus,
     private readonly commandBus: CommandBus,
   ) {}
 
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Add and remove like to comment (toggle behaviour)',
   })
@@ -41,7 +40,8 @@ export class CommentLikesController {
     return { count: likesCount };
   }
 
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Checks if chosen comment is liked by current logged user',
   })
