@@ -36,7 +36,7 @@ import { GetArticlesCreatedByClientQuery } from './queries/getArticlesCreatedByC
 import { ArticleDto } from './queries/getArticles/dto/article.dto';
 import { OrderType } from './types/orderType';
 import { GetArticlesQueryDto } from './queries/getArticlesCreatedByClient/dto/get.articles.query.dto';
-import { PaginatedArticlesDto } from './queries/getArticlesCreatedByClient/dto/PaginatedArticlesDto';
+import { PaginatedArticlesDto } from './queries/getArticlesCreatedByClient/dto/paginated.articles.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 export interface ArticlesPage {

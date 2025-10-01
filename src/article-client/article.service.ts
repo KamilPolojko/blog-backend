@@ -12,7 +12,7 @@ import { CloudinaryService } from '../Cloudinary/cloudinary.service';
 import { ArticleDto } from './queries/getArticles/dto/article.dto';
 import { UpdateArticleDto } from './commands/editArticle/dto/update-article.dto';
 import { GetArticlesQueryDto } from './queries/getArticlesCreatedByClient/dto/get.articles.query.dto';
-import { PaginatedArticlesDto } from './queries/getArticlesCreatedByClient/dto/PaginatedArticlesDto';
+import { PaginatedArticlesDto } from './queries/getArticlesCreatedByClient/dto/paginated.articles.dto';
 
 type ArticleWithCounts = ArticleDto & {
   likesCount: number;

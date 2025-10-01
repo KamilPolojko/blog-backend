@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { ArticleService } from '../../../article.service';
 import { GetArticlesCreatedByClientQuery } from '../impl/get-articles-created-by-client.query';
-import { PaginatedArticlesDto } from '../dto/PaginatedArticlesDto';
+import { PaginatedArticlesDto } from '../dto/paginated.articles.dto';
 
 @QueryHandler(GetArticlesCreatedByClientQuery)
 export class GetArticlesCreatedByClientQueryHandler
