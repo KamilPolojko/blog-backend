@@ -32,6 +32,89 @@ A high-performance, production-ready backend API for a modern blog application, 
 - **Authentication:** JWT, Passport.js
 - **Validation:** Class Validator & Class Transformer
 
+## 🗃️ Database Schema & Relations
+
+## 🗃️ Database Schema & Relations
+
+### Entity Relationship Diagram
+
+```mermaid
+erDiagram
+    CLIENT {
+        string id PK
+        string email
+        string username
+        string password
+    }
+    PROFILE {
+        string id PK
+        string firstName
+        string lastName
+        string linkIImage
+    }
+    ARTICLE {
+        string id PK
+        string title
+        text content
+        string linkIImage
+    }
+    COMMENT {
+        string id PK
+        text content
+    }
+    LIKE {
+        string id PK
+    }
+    COMMENT_LIKE {
+        string id PK
+    }
+    NOTIFICATION {
+        string id PK
+        boolean isRead
+    }
+    
+    CLIENT ||--|| PROFILE : has
+    CLIENT ||--o{ ARTICLE : creates
+    CLIENT ||--o{ COMMENT : writes
+    CLIENT ||--o{ NOTIFICATION : receives
+    CLIENT ||--o{ LIKE : gives
+    CLIENT ||--o{ COMMENT_LIKE : gives
+    CLIENT }o--o{ ARTICLE : saves
+    ARTICLE ||--o{ COMMENT : has
+    ARTICLE ||--o{ LIKE : receives
+    ARTICLE }o--o{ CLIENT : saved_by
+    COMMENT ||--o{ COMMENT_LIKE : receives
+    COMMENT ||--o{ COMMENT : has_children
+    NOTIFICATION ||--|| CLIENT : recipient
+    NOTIFICATION ||--|| CLIENT : actor
+    NOTIFICATION }|--|| ARTICLE : references
+    NOTIFICATION }|--|| COMMENT : references
+```
+
+### Key Relationships & Business Logic
+
+| Relation | Type | Description |
+| :--- | :--- | :--- |
+| **Client ↔ Profile** | One-to-One | Each user has one profile with personal details |
+| **Client ↔ Article** | One-to-Many | Users can create multiple blog articles |
+| **Client ↔ Comment** | One-to-Many | Users can write multiple comments |
+| **Article ↔ Comment** | One-to-Many | Articles can have multiple comments |
+| **Article ↔ Like** | One-to-Many | Articles can receive multiple likes |
+| **Comment ↔ CommentLike** | One-to-Many | Comments can receive multiple likes |
+| **Client ↔ SavedArticles** | Many-to-Many | Users can bookmark/save multiple articles |
+| **Comment ↔ Comment** | Self-Reference | Nested comments/replies system |
+| **Notification ↔ Client** | Many-to-One | Notifications sent to users for interactions |
+
+### Core Entities Overview
+
+- **`CLIENT`** - User accounts with authentication
+- **`PROFILE`** - User personal information and preferences
+- **`ARTICLE`** - Blog posts with categories and reading time
+- **`COMMENT`** - Comment system with nested replies
+- **`LIKE`** - Article likes tracking
+- **`COMMENT_LIKE`** - Comment likes tracking
+- **`NOTIFICATION`** - Real-time notifications system
+
 ## 📁 Project Structure & CQRS
 
 This project uses the Command and Query Responsibility Segregation (CQRS) pattern, which separates read (Queries) and write (Commands) operations for better scalability, performance, and maintainability.
