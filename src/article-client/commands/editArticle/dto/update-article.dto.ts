@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class UpdateArticleDto {
   @ApiProperty({
     default: '',
   })
   @IsNotEmpty()
+  @IsOptional()
   @IsString()
   articleId: string;
 
@@ -13,6 +15,7 @@ export class UpdateArticleDto {
     default: '',
   })
   @IsNotEmpty()
+  @IsOptional()
   @IsString()
   title: string;
 
@@ -20,6 +23,7 @@ export class UpdateArticleDto {
     default: '',
   })
   @IsNotEmpty()
+  @IsOptional()
   @IsString()
   content: string;
 
@@ -27,22 +31,34 @@ export class UpdateArticleDto {
     default: '',
   })
   @IsNotEmpty()
+  @IsOptional()
   @IsString()
   description: string;
 
   @ApiProperty({
-    description: 'Tablica kategorii',
+    description: 'Categories array',
     type: 'array',
     items: { type: 'string' },
     required: false,
   })
   @IsOptional()
+  @Transform(({ value }) => {
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch {
+        return [value];
+      }
+    }
+    return value;
+  })
   @IsArray()
   @IsString({ each: true })
   categories?: string[];
 
   @ApiProperty({
-    description: 'Czy artykuł jest aktywny',
+    description: 'Is article active',
     default: 'true',
   })
   @IsOptional()
@@ -50,7 +66,7 @@ export class UpdateArticleDto {
   isActive?: string;
 
   @ApiProperty({
-    description: 'Szacowany czas czytania w minutach',
+    description: 'Estimated reading time',
     default: '5',
   })
   @IsOptional()
@@ -59,7 +75,7 @@ export class UpdateArticleDto {
 
   @ApiProperty({
     example: '2025-09-10T14:23:00.000Z',
-    description: 'Data utworzenia artykułu',
+    description: 'Created date of article',
   })
   @IsOptional()
   @IsString()
